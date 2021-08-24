@@ -1,19 +1,42 @@
 <template>
     <div class="pokemon-container">
-        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg"
+
+        <img :class="( showPokemon ? 'fade-in' : 'hidden-pokemon' )" 
+             :src="imgSrc" 
+             alt="pokemon" />
+
+        <!-- <img :src="imgSrc"
             class="hidden-pokemon"
             alt="pokemon"
         >
-
-        <!-- <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg"
+        <img v-if="showPokemon" 
+            :src="imgSrc"
             class="fade-in"
             alt="pokemon"
-        > -->
+        >  -->
     </div>
 </template>
 
 <script>
 export default {
+
+    props: {
+        pokemonId: {
+            type: Number,
+            required: true,
+        },
+        showPokemon: {
+            type: Boolean,
+            required: true,
+            default: false,
+        }
+    },
+
+    computed: {
+        imgSrc() {
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${ this.pokemonId }.svg`
+        }
+    }
 
 }
 </script>
@@ -21,18 +44,21 @@ export default {
 <style scoped>
     .pokemon-container {
         height: 200px;
-        justify-content: center;
-        align-items: center;
+        width: 400px;
+        margin: 0 auto;
+        position: relative;
     }
     img {
         height: 200px;
-        /* position: absolute; */
-        right: 32%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         -webkit-user-drag: none;
-        -webkit-user-select: none;
+        -webkit-user-select: none
     }
     .hidden-pokemon {
         filter: brightness(0);
