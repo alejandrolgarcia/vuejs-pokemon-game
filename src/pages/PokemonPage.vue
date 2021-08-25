@@ -11,10 +11,15 @@
             :pokemons="pokemonArray" 
             @selection="checkAnswer($event)" />
 
+        <PokemonScore :points="points" :lives="lives" />
+
         <div v-if="showAnswer">
             <h2>{{ message }}</h2>
             <button @click="newGame" class="primary small">
-                Nuevo Juego
+                Reset
+            </button>
+            <button @click="nextPokemon" :class="( lives > 0 ? 'primary small' : 'primary small disabled' )">
+                Siguiente
             </button>
         </div>
     </id>
@@ -23,6 +28,7 @@
 <script>
 import PokemonImage from '@/components/PokemonImage.vue'
 import PokemonOptions from '@/components/PokemonOptions.vue'
+import PokemonScore from '../components/PokemonScore.vue'
 
 import getPokemonOptions from '@/helpers/getPokemonOptions'
 
@@ -30,6 +36,7 @@ export default {
     components: {
         PokemonImage,
         PokemonOptions,
+        PokemonScore
     },
 
     data() {
@@ -38,7 +45,9 @@ export default {
             pokemon: null,
             showPokemon: false,
             showAnswer: false,
-            message: ''
+            message: '',
+            points: 0,
+            lives: 3
         }
     },
 
@@ -56,15 +65,26 @@ export default {
 
             if ( selectedId === this.pokemon.id ) {
                 this.message = `Correcto, es ${ this.pokemon.name }!`
+                this.points = this.points + 1
             } else {
                 this.message = `Oops, era ${ this.pokemon.name } :'(`
+                this.lives = this.lives - 1
             }
+        },
+        nextPokemon() {
+            this.showPokemon  = false,
+            this.showAnswer   = false,
+            this.pokemonArray = [],
+            this.pokemon      = null,
+            this.mixPokemonsArray()
         },
         newGame() {
             this.showPokemon  = false,
             this.showAnswer   = false,
             this.pokemonArray = [],
             this.pokemon      = null,
+            this.points       = 0,
+            this.lives        = 3
             this.mixPokemonsArray()
         }
     },
@@ -119,5 +139,10 @@ export default {
 
     button.small {
         font-size: 0.6em;
+    }
+
+    button.disabled {
+        pointer-events: none;
+        opacity: 0.25; 
     }
 </style>
